@@ -3,7 +3,7 @@ from setuptools import find_packages
 
 setup(
     name='python-zilore',
-    version='0.0.1',
+    version='0.0.2',
     description="Zilore DNS API Wrapper",
     author="clyang",
     author_email='clyang@clyang.net',
@@ -26,6 +26,6 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Topic :: Internet :: WWW/HTTP',
     ],
-    packages=['python-zilore'],
+    packages=['ziloreapi'],
     install_requires=['requests']
 )
