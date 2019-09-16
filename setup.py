@@ -1,10 +1,20 @@
 from setuptools import setup
 from setuptools import find_packages
 
+from codecs import open
+from os import path, listdir
+
+# Get the long description from the README file
+here = path.abspath(path.dirname(__file__))
+with open(path.join(here, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
     name='python-zilore',
-    version='0.0.2',
+    version='0.0.3',
     description="Zilore DNS API Wrapper",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     author="clyang",
     author_email='clyang@clyang.net',
     url='https://github.com/clyang/python-zilore',
