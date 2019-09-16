@@ -71,7 +71,7 @@ It's simple to use the library to interact witgh Zilore DNS.
 	```
 
 ## Current supported API
-Unfortunately, I can only afford for using Personal Plan. Hence, I'm able to implement and test some interesting features such as `Geo Records`.
+Unfortunately, I can only afford for using Personal Plan. Hence, I'm not able to implement and test some interesting features such as `Geo Records`.
 
 * DOMAINS
 	* list_domains
