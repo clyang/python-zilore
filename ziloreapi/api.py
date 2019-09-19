@@ -90,7 +90,7 @@ class Api(object):
         params = 'record_type={}&record_ttl={}&record_name={}&record_value={}'.format(record_type, record_ttl, record_name, record_value)
         return self._do_request('domains/{}/records/{}'.format(domain_name, record_id), params, 'put')
 
-    def update_record_status(self, domain_name='', record_id=None, record_status=''):
+    def update_record_status(self, domain_name='', record_id=None, record_status=None):
         params = 'record_status={}'.format(record_status)
         return self._do_request('domains/{}/records/{}/status'.format(domain_name,record_id), params, 'put')
 
@@ -109,3 +109,61 @@ class Api(object):
 
     def restore_snapshot(self, domain_name='', snapshot_id=''):
         return self._do_request('domains/{}/snapshots/{}/restore'.format(domain_name, snapshot_id), '', 'post')
+
+    def geo_records(self, domain_name=''):
+        return self._do_request('domains/{}/geo/defaults'.format(domain_name), '', 'get')
+
+    def list_geo_records(self, domain_name='', offset=0, limit='', order_by='', order_param='', search_text=''):
+        params = 'offset={}&limit={}&order_by={}&order_param={}&search_text={}'.format(offset, limit, order_by, order_param, search_text)
+        return self._do_request('domains/{}/geo'.format(domain_name), params, 'get')
+
+    def add_geo_record(self, domain_name='', record_name='', record_type='', geo_region='', record_value=''):
+        params = 'record_name={}&record_type={}&geo_region={}&record_value={}'.format(record_name, record_type, geo_region, record_value)
+        return self._do_request('domains/{}/geo'.format(domain_name), params, 'post')
+
+    def update_geo_record(self, domain_name='', record_id=None, geo_region='', record_value=''):
+        params = 'geo_region={}&record_value={}'.format(geo_region, record_value)
+        return self._do_request('domains/{}/geo/{}'.format(domain_name, record_id), params, 'put')
+
+    def failover_records(self, domain_name=''):
+        return self._do_request('domains/{}/failovers/available'.format(domain_name), '', 'get')
+
+    def list_failover_records(self, domain_name='', offset=0, limit='', order_by='', order_param=''):
+        params = 'offset={}&limit={}&order_by={}&order_param={}'.format(offset, limit, order_by, order_param)
+        return self._do_request('domains/{}/failovers'.format(domain_name), params, 'get')
+
+    def add_failover_record(self, domain_name='', record_id=None, failover_check_type='', failover_check_interval='', failover_return_to_main_value='', failover_additional_port='', failover_record_backup_value=[], failover_use_fws='', failover_additional_response='', failover_additional_request='', failover_notification_email='', failover_notification_sms=''):
+        backup_value_str = ''
+        if isinstance(failover_record_backup_value, list) and failover_record_backup_value:
+            max_val = min(len(failover_record_backup_value) ,3)
+            for i in range(max_val):
+                backup_value_str += 'failover_record_backup_value[{}]={}&'.format(i, failover_record_backup_value[i])
+
+        params = 'record_id={}&failover_check_type={}&failover_check_interval={}&failover_return_to_main_value={}&failover_additional_port={}&failover_use_fws={}&failover_notification_email={}&failover_notification_sms={}'.format(record_id, failover_check_type, failover_check_interval, failover_return_to_main_value, failover_additional_port, failover_use_fws, failover_notification_email, failover_notification_sms)
+        if failover_check_type == 'TCP':
+            params = '{}&failover_additional_respons={}&failover_additional_request={}'.format(params, failover_additional_respons, failover_additional_request)
+        params = '{}&{}'.format(params, backup_value_str)
+
+        return self._do_request('domains/{}/failovers'.format(domain_name), params, 'post')
+
+    def update_failover_record(self, domain_name='', record_id=None, failover_check_type='', failover_check_interval='', failover_return_to_main_value='', failover_additional_port='', failover_record_backup_value=[], failover_use_fws='', failover_additional_response='', failover_additional_request='', failover_notification_email='', failover_notification_sms=''):
+        backup_value_str = ''
+        if isinstance(failover_record_backup_value, list) and failover_record_backup_value:
+            max_val = min(len(failover_record_backup_value) ,3)
+            for i in range(max_val):
+                backup_value_str += 'failover_record_backup_value[{}]={}&'.format(i, failover_record_backup_value[i])
+
+        params = 'failover_check_type={}&failover_check_interval={}&failover_return_to_main_value={}&failover_additional_port={}&failover_use_fws={}&failover_notification_email={}&failover_notification_sms={}'.format(record_id, failover_check_type, failover_check_interval, failover_return_to_main_value, failover_additional_port, failover_use_fws, failover_notification_email, failover_notification_sms)
+        if failover_check_type == 'TCP':
+            params = '{}&failover_additional_respons={}&failover_additional_request={}'.format(params, failover_additional_respons, failover_additional_request)
+        params = '{}&{}'.format(params, backup_value_str)
+
+        return self._do_request('domains/{}/failovers/{}'.format(domain_name, record_id), params, 'put')
+
+    def delete_failover_record(self, domain_name='', record_id=[]):
+        if isinstance(record_id, int):
+            record_id = [record_id]
+
+        params = 'record_id={}'.format(','.join(str(x) for x in record_id))
+        return self._do_request('domains/{}/failovers'.format(domain_name), params, 'delete')
+
