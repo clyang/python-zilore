@@ -88,10 +88,24 @@ Unfortunately, I can only afford for using Personal Plan. Hence, I'm not able to
 	* update_record
 	* update_record_status
 	* delete_record
+
 * SNAPSHOTS
 	* list_snapshots
 	* list_snapshots_records
 	* restore_snapshot
+
+* GEO RECORDS
+	* geo_records
+	* list_geo_records
+	* add_geo_record
+	* update_geo_record
+
+* FAILOVER RECORDS
+	* failover_records
+	* list_failover_records
+	* add_failover_record
+	* update_failover_record
+	* delete_failover_record
 
 ## License
 MIT License	
