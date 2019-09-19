@@ -1,5 +1,5 @@
 # python-zilore
-[Zilore DNS](https://zilore.com/en/dns) API Python Wrapper. Currently it supports the following functionalities:
+[Zilore DNS](https://zilore.com/en/dns) API Python Wrapper. It was implemented by following [Zilore DNS API](https://zilore.com/en/help/api) document.
 
 ## Installaion
 The easiest way to install `python-zilore` and get updates is by using `pip`
@@ -71,7 +71,7 @@ It's simple to use the library to interact witgh Zilore DNS.
 	```
 
 ## Current supported API
-Unfortunately, I can only afford for using Personal Plan. Hence, I'm not able to implement and test some interesting features such as `Geo Records`.
+Note: Custom Template and Web/Email forwarding will be supported soon.
 
 * DOMAINS
 	* list_domains
