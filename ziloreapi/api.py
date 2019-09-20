@@ -68,7 +68,7 @@ class Api(object):
     def list_valid_record_ttl(self):
         return self._do_request('settings/ttl')
 
-    def add_record(self, domain_name='', record_type='', record_ttl=300, record_name='', record_value=''):
+    def add_record(self, domain_name='', record_type='', record_ttl=600, record_name='', record_value=''):
         record_type = record_type.upper()
 
         if not record_name.endswith(domain_name):
@@ -79,7 +79,7 @@ class Api(object):
         params = 'record_type={}&record_ttl={}&record_name={}&record_value={}'.format(record_type, record_ttl, record_name, record_value)
         return self._do_request('domains/{}/records'.format(domain_name), params, 'post')
 
-    def update_record(self, domain_name='', record_id=None, record_type='', record_ttl=300, record_name='', record_value=''):
+    def update_record(self, domain_name='', record_id=None, record_type='', record_ttl=600, record_name='', record_value=''):
         record_type = record_type.upper()
 
         if record_name != '' and not record_name.endswith(domain_name):
@@ -248,7 +248,6 @@ class Api(object):
                 continue
             if v != '' and v is not None:
                 params += '&{}={}'.format(k, v)
-
         params = params[1:]
 
         return self._do_request('domains/{}/web_forwarding/{}'.format(domain_name, wf_address_id), params, 'put')
@@ -263,3 +262,76 @@ class Api(object):
 
         params = 'wf_address_id={}'.format(','.join(str(x) for x in wf_address_id))
         return self._do_request('domains/{}/web_forwarding'.format(domain_name), params, 'delete')
+
+    def list_custom_templates(self):
+        return self._do_request('templates', '', 'get')
+
+    def create_custom_template(self, custom_template_name='', custom_template_description=''):
+        params = 'custom_template_name={}'.format(custom_template_name)
+        if custom_template_description != '':
+            params = '{}&custom_template_description={}'.format(params, custom_template_description)
+
+        return self._do_request('templates', params, 'post')
+
+    def update_custom_template(self, template_id=None, custom_template_name='', custom_template_description=''):
+        args = locals()
+        params = ''
+        for k, v in args.items():
+            if k in ['self', 'template_id']:
+                continue
+            if v != '' and v is not None:
+                params += '&{}={}'.format(k, v)
+        params = params[1:]
+
+        return self._do_request('templates/{}'.format(template_id), params, 'put')
+
+    def delete_custom_template(self, template_id=None):
+        return self._do_request('templates/{}'.format(template_id), '', 'delete')
+
+    def restore_custom_template(self, domain_name='', template_id=None):
+        params = 'domain_name={}'.format(domain_name)
+
+        return self._do_request('templates/{}/restore'.format(template_id), params, 'post')
+
+    def list_custom_templates_records(self, template_id=None, domain_name=''):
+        params = ''
+        if domain_name != '':
+            params = 'domain_name={}'.format(domain_name)
+
+        return self._do_request('templates/{}/records'.format(template_id), params, 'get')
+
+    def add_custom_template_record(self, template_id=None, record_type='', record_ttl=600, record_name='', record_value=''):
+        record_type = record_type.upper()
+
+        if not record_name.endswith('.{{domain_name}}'):
+            record_name = '{}.{{domain_name}}'.format(record_name)
+        if record_type == 'TXT':
+            record_value = '"{}"'.format(record_value)
+
+        params = 'record_type={}&record_ttl={}&record_name={}&record_value={}'.format(record_type, record_ttl, record_name, record_value)
+        return self._do_request('templates/{}/records'.format(template_id), params, 'post')
+
+    def update_custom_template_record(self, template_id=None, record_id=None, record_type='', record_ttl='', record_name='', record_value=''):
+        record_type = record_type.upper()
+
+        if not record_name.endswith('.{{domain_name}}'):
+            record_name = '{}.{{domain_name}}'.format(record_name)
+        if record_type == 'TXT':
+            record_value = '"{}"'.format(record_value)
+
+        args = locals()
+        params = ''
+        for k, v in args.items():
+            if k in ['self', 'template_id', 'record_id']:
+                continue
+            if v != '' and v is not None:
+                params += '&{}={}'.format(k, v)
+
+        return self._do_request('templates/{}/records/{}'.format(template_id, record_id), params, 'put')
+
+    def delete_custom_template_record(self, template_id='', record_id=[]):
+        if isinstance(record_id, int):
+            record_id = [record_id]
+
+        params = 'record_id={}'.format(','.join(str(x) for x in record_id))
+        return self._do_request('template/{}/records'.format(template_id), params, 'delete')
