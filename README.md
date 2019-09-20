@@ -71,7 +71,7 @@ It's simple to use the library to interact witgh Zilore DNS.
 	```
 
 ## Current supported API
-All API are **FULL SUPPORTED** by python-zilore
+All API are **FULLY SUPPORTED** by python-zilore
 
 * DOMAINS
 	* list_domains
