@@ -71,7 +71,7 @@ It's simple to use the library to interact witgh Zilore DNS.
 	```
 
 ## Current supported API
-Note: Custom Template api will be supported soon.
+All API are **FULL SUPPORTED** by python-zilore
 
 * DOMAINS
 	* list_domains
@@ -118,6 +118,17 @@ Note: Custom Template api will be supported soon.
 	* update_wf_address
 	* update_wf_address_status
 	* delete_wf_address
+
+* CUSTOM TEMLATES
+	* list_custom_templates
+	* create_custom_template
+	* update_custom_template
+	* delete_custom_template
+	* restore_custom_template
+	* list_custom_templates_records
+	* add_custom_template_record
+	* update_custom_template_record
+	* delete_custom_template_record
 
 ## License
 MIT License	
