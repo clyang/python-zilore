@@ -82,12 +82,19 @@ class Api(object):
     def update_record(self, domain_name='', record_id=None, record_type='', record_ttl=300, record_name='', record_value=''):
         record_type = record_type.upper()
 
-        if not record_name.endswith(domain_name):
+        if record_name != '' and not record_name.endswith(domain_name):
             record_name = '{}.{}'.format(record_name, domain_name)
         if record_type == 'TXT':
             record_value = '"{}"'.format(record_value)
 
-        params = 'record_type={}&record_ttl={}&record_name={}&record_value={}'.format(record_type, record_ttl, record_name, record_value)
+        args = locals()
+        params = ''
+        for k, v in args.items():
+            if k in ['self', 'domain_name', 'record_id']:
+                continue
+            if v != '' and v is not None:
+                params += '&{}={}'.format(k, v)
+
         return self._do_request('domains/{}/records/{}'.format(domain_name, record_id), params, 'put')
 
     def update_record_status(self, domain_name='', record_id=None, record_status=None):
@@ -122,7 +129,14 @@ class Api(object):
         return self._do_request('domains/{}/geo'.format(domain_name), params, 'post')
 
     def update_geo_record(self, domain_name='', record_id=None, geo_region='', record_value=''):
-        params = 'geo_region={}&record_value={}'.format(geo_region, record_value)
+        args = locals()
+        params = ''
+        for k, v in args.items():
+            if k in ['self', 'domain_name', 'record_id']:
+                continue
+            if v != '' and v is not None:
+                params += '&{}={}'.format(k, v)
+
         return self._do_request('domains/{}/geo/{}'.format(domain_name, record_id), params, 'put')
 
     def failover_records(self, domain_name=''):
@@ -167,3 +181,85 @@ class Api(object):
         params = 'record_id={}'.format(','.join(str(x) for x in record_id))
         return self._do_request('domains/{}/failovers'.format(domain_name), params, 'delete')
 
+    def list_mf_addresses(self, domain_name='', offset=0, limit='', order_by='', order_param=''):
+        params = 'offset={}&limit={}&order_by={}&order_param={}'.format(offset, limit, order_by, order_param)
+        return self._do_request('domains/{}/mail_forwarding'.format(domain_name), params, 'get')
+
+    def add_mf_address(self, domain_name='', source='', destination=''):
+        suffix = '@{}'.format(domain_name)
+        source = source.replace(suffix, '')
+
+        params = 'source={}&destination={}'.format(source, destination)
+        return self._do_request('domains/{}/mail_forwarding'.format(domain_name), params, 'post')
+
+    def update_mf_address(self, domain_name='', mf_address_id='', source='', destination=''):
+        args = locals()
+        params = ''
+        for k, v in args.items():
+            if k in ['self', 'domain_name']:
+                continue
+            if v != '':
+                params += '&{}={}'.format(k, v)
+
+        params = params[1:]
+        suffix = '@{}'.format(domain_name)
+        params = params.replace(suffix, '')
+
+        return self._do_request('domains/{}/mail_forwarding/{}'.format(domain_name, mf_address_id), params, 'put')
+
+    def update_mf_address_status(self, domain_name='', mf_address_id=None, status=None):
+        params = 'status={}'.format(status)
+        return self._do_request('domains/{}/mail_forwarding/{}/status'.format(domain_name,mf_address_id), params, 'put')
+
+    def delete_mf_address(self, domain_name='', mf_address_id=[]):
+        if isinstance(mf_address_id, int):
+            mf_address_id = [mf_address_id]
+
+        params = 'mf_address_id={}'.format(','.join(str(x) for x in mf_address_id))
+        return self._do_request('domains/{}/mail_forwarding'.format(domain_name), params, 'delete')
+
+    def list_wf_addresses(self, domain_name='', offset=0, limit='', order_by='', order_param=''):
+        params = 'offset={}&limit={}&order_by={}&order_param={}'.format(offset, limit, order_by, order_param)
+        return self._do_request('domains/{}/web_forwarding'.format(domain_name), params, 'get')
+
+    def add_wf_address(self, domain_name='', https=None, code=None, source='', destination=''):
+        destination = destination.replace('http://', '')
+        destination = destination.replace('https://', '')
+
+        params = 'https={}&code={}&destination={}'.format(https, code, destination)
+        if source != '':
+            suffix = '.{}'.format(domain_name)
+            source = source.replace(suffix, '')
+            params = '{}&source={}'.format(params, source)
+
+        return self._do_request('domains/{}/web_forwarding'.format(domain_name), params, 'post')
+
+    def update_wf_address(self, domain_name='', wf_address_id=None, https=None, code=None, source='', destination=''):
+        destination = destination.replace('http://', '')
+        destination = destination.replace('https://', '')
+
+        if source != '':
+            source = source.replace('.{}'.format(domain_name), '')
+
+        args = locals()
+        params = ''
+        for k, v in args.items():
+            if k in ['self', 'domain_name', wf_address_id]:
+                continue
+            if v != '' and v is not None:
+                params += '&{}={}'.format(k, v)
+
+        params = params[1:]
+
+        return self._do_request('domains/{}/web_forwarding/{}'.format(domain_name, wf_address_id), params, 'put')
+
+    def update_wf_address_status(self, domain_name='', wf_address_id=None, status=None):
+        params = 'status={}'.format(status)
+        return self._do_request('domains/{}/web_forwarding/{}/status'.format(domain_name,wf_address_id), params, 'put')
+
+    def delete_wf_address(self, domain_name='', wf_address_id=[]):
+        if isinstance(wf_address_id, int):
+            wf_address_id = [wf_address_id]
+
+        params = 'wf_address_id={}'.format(','.join(str(x) for x in wf_address_id))
+        return self._do_request('domains/{}/web_forwarding'.format(domain_name), params, 'delete')
