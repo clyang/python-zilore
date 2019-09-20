@@ -71,7 +71,7 @@ It's simple to use the library to interact witgh Zilore DNS.
 	```
 
 ## Current supported API
-Note: Custom Template and Web/Email forwarding will be supported soon.
+Note: Custom Template api will be supported soon.
 
 * DOMAINS
 	* list_domains
@@ -106,6 +106,18 @@ Note: Custom Template and Web/Email forwarding will be supported soon.
 	* add_failover_record
 	* update_failover_record
 	* delete_failover_record
+
+* WEB AND MAIL FORWARDING
+	* list_mf_addresses
+	* add_mf_address
+	* update_mf_address
+	* update_mf_address_status
+	* delete_mf_address
+	* list_wf_addresses
+	* add_wf_address
+	* update_wf_address
+	* update_wf_address_status
+	* delete_wf_address
 
 ## License
 MIT License	
