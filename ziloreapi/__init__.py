@@ -9,7 +9,7 @@ This is a library that allows simple access to the Zilore DNS HTTP API.
 """
 
 __title__ = 'ziloredns'
-__version__ = '0.0.1'
+__version__ = '0.0.4'
 __author__ = 'Cheng-Lin Yang'
 __license__ = 'MIT'
 __copyright__ = 'Copyright 2019 Cheng-Lin Yang'
